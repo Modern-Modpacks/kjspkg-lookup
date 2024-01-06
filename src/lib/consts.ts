@@ -9,5 +9,5 @@ export default {
 	KJSPKG_README: 'https://github.com/Modern-Modpacks/kjspkg#kjspkg',
 	// MR_VALID: 'https://api.modrinth.com/v2/project/',
 	// MR_TARGET: 'https://modrinth.com/mod/'
-	AUTOMATIN_URL: 'https://tizudev.vercel.app/automatin/api/1058430315263180890/kjspkg'
+	AUTOMATIN_URL: 'https://tizudev.vercel.app/automatin/api/1025316079226064966/kjspkg'
 };
