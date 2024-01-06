@@ -16,7 +16,7 @@ const config = {
 		}),
 
 		paths: {
-			base: '', // /kjspkg-lookup ?
+			base: '/kjspkg-lookup'
 		}
 	}
 };
