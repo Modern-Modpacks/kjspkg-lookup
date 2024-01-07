@@ -5,6 +5,11 @@
 	import { onMount } from 'svelte';
 
 	onMount(() => {
+		if ($page.url.hash != '') {
+			goto(base + `/p/?id=${$page.url.hash.substring(1)}`);
+			return;
+		}
+
 		if (!$userPreferencesStore.alreadyVisited) {
 			userPreferencesStore.update((prev) => ({ ...prev, alreadyVisited: true }));
 			goto(base + '/home');
