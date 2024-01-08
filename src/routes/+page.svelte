@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
+	import { page } from '$app/stores';
 	import { userPreferencesStore } from '$lib/stores';
 	import { onMount } from 'svelte';
 
