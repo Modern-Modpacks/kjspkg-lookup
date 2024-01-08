@@ -112,7 +112,7 @@
 	background={$currentScrollPosition.y > 16 ? 'bg-surface-800/75' : 'bg-transparent'}
 >
 	<svelte:fragment slot="lead">
-		<a class="flex items-center gap-2" href={base}>
+		<a class="flex items-center gap-2" href="{base}/">
 			<img src={consts.LOGO} alt="logo" class="aspect-square w-8 min-w-8 rounded-token" />
 			<span class="hidden lg:inline">KJSPKG Lookup</span>
 		</a>
