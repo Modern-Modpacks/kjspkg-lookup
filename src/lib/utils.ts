@@ -99,3 +99,11 @@ export { generateInputString, parseInputString };
 export function removeBase(target: string, base: string): string {
 	return target.replace(base, '');
 }
+
+export async function getGhInfo(path : string, key: string) : Promise<any> {
+	return await (await fetch(`${consts.GH_API_URL}/${path}`, {headers: {
+		'Accept': 'application/vnd.github+json',
+		'Authorization': 'Bearer '+key,
+		'X-GitHub-Api-Version': '2022-11-28'
+	}})).json()
+}

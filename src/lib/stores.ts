@@ -19,6 +19,9 @@ export const currentSearchStore = writable<string>('');
 
 export const currentScrollPosition = writable<{ x: number; y: number }>({ x: 0, y: 0 });
 
+export const ghApiKeyStore = writable<string | null>(null);
+export const ghApiLoginStore = writable<string | null>(null);
+
 export const userPreferencesStore = localStorageStore<{
 	sortBy: '' | 'name' | 'author' | 'downloads' | 'views';
 	theme: string;

@@ -4,12 +4,13 @@
 	import { page } from '$app/stores';
 	import { IconBlank } from '$lib';
 	import { AppBar } from '@skeletonlabs/skeleton';
-	import { IconCheck, IconColorSwatch, IconSearch } from '@tabler/icons-svelte';
+	import { IconCheck, IconColorSwatch, IconSearch, IconUser } from '@tabler/icons-svelte';
 	import consts from './consts';
 	import { contextMenu, type ContextMenuItem } from './overlays/contextMenu';
 	import { currentScrollPosition, currentSearchStore, userPreferencesStore } from './stores';
 	import { parseInputString } from './utils';
 	import { fly } from 'svelte/transition';
+	import IconLogin from './IconLogin.svelte';
 
 	function getQuery(): string {
 		return $page.route.id == '/s' ? $page.url.searchParams.get('q') ?? '' : '';
@@ -150,5 +151,6 @@
 		>
 			<IconColorSwatch />
 		</button>
+		<IconLogin />
 	</svelte:fragment>
 </AppBar>

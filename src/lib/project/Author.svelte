@@ -1,14 +1,14 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import consts from '$lib/consts';
-	import { IconBrandGithub } from '@tabler/icons-svelte';
+	import { ghApiKeyStore, ghApiLoginStore } from '$lib/stores';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { IconBrandGithub, IconLogout } from '@tabler/icons-svelte';
 
-	export let p: [string, string];
+	export let author : string;
 	export let c: number = 0;
 	export let showAvatar = true;
 	export let showGit = true;
-
-	const locatorInfo = p[1].match(consts.LOCATOR_REGEX)!;
-	const author = locatorInfo[1];
 </script>
 
 <div class="card flex p-4">
@@ -21,16 +21,28 @@
 	{/if}
 	<dl class="grow">
 		<dt class="font-bold select-text">{author}</dt>
-		{#if c > 0}
-			<dd class="text-sm opacity-50">
+		<dd class="text-sm opacity-50">
+			{#if author!=$ghApiLoginStore}
 				owns {c}
 				{c == 1 ? 'package' : 'packages'}
-			</dd>
-		{/if}
+			{:else if author==$ghApiLoginStore}
+				is you!
+			{/if}
+		</dd>
 	</dl>
 	{#if showGit}
 		<a class="variant-filled-secondary btn-icon" href={`https://github.com/${author}`} target="_blank">
 			<IconBrandGithub />
 		</a>
+	{/if}
+	{#if author==$ghApiLoginStore}
+		<button class="variant-filled-secondary btn-icon ml-2" on:click={() => {
+			$ghApiKeyStore = null;
+			localStorage.removeItem('gh_key');
+			
+			location.replace(base);
+		}}>
+			<IconLogout />
+		</button>
 	{/if}
 </div>

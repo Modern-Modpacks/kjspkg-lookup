@@ -7,6 +7,8 @@
 	import { contextMenu } from '$lib/overlays/contextMenu';
 	import {
 		currentSearchStore,
+		ghApiKeyStore,
+		ghApiLoginStore,
 		packageListStore,
 		packageStatusStore,
 		userPreferencesStore
@@ -108,7 +110,7 @@
 				{resultedFilter.length == 1 ? 'package' : 'packages'}
 			</a>
 
-			{#if queryParams.author && filteredAuthor.length > 0}
+			{#if queryParams.author && (filteredAuthor.length > 0 || queryParams.author==$ghApiLoginStore)}
 				<button
 					class="transition-all hover:variant-filled-error hover:rounded hover:p-1 hover:px-2 hover:line-through"
 					on:click={() => {
@@ -203,8 +205,8 @@
 	</div>
 </div>
 
-{#if queryParams.author && filteredAuthor.length > 0}
-	<Author p={filteredAuthor[0]} c={filteredAuthor.length} />
+{#if queryParams.author && (filteredAuthor.length > 0 || queryParams.author==$ghApiLoginStore)}
+	<Author author={queryParams.author} c={filteredAuthor.length} />
 {/if}
 
 {#if state == 'loading'}
@@ -219,11 +221,18 @@
 		{/each}
 	</dl>
 {:else if state == 'ready' && resultedFilter.length == 0}
-	<p>Here, have a cookie, if that makes you feel any better: 🍪</p>
-	<p class="text-sm opacity-50">
-		Fun fact: You can use '@author:name' to view packages made by an author. What 'bout using
-		'@details' to get technical details on each package?
-	</p>
+	{#if queryParams.author!=$ghApiLoginStore}
+		<p>Here, have a cookie, if that makes you feel any better: 🍪</p>
+		<p class="text-sm opacity-50">
+			Fun fact: You can use '@author:name' to view packages made by an author. What 'bout using
+			'@details' to get technical details on each package?
+		</p>
+	{:else}
+		<p class="opacity-50 text-center">
+			Looks like you don't have any approved packages published to KJSPKG.
+			How sad!
+		</p>
+	{/if}
 {:else if state == 'ready'}
 	<dl
 		class="grid grid-cols-1 gap-2"
