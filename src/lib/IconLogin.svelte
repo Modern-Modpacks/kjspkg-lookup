@@ -30,7 +30,7 @@
 			return null;
 		}
 
-		let key : string = (await r.json()).access_token;
+		let key : string = (await r.json())[PUBLIC_CLIENT_SECRET ? 'access_token' : 'token'];
 		localStorage.setItem('gh_key', key);
 
 		let newQ = new URLSearchParams($page.url.searchParams.toString());
