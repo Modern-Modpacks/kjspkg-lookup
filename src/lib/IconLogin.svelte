@@ -13,8 +13,10 @@
     async function getGhKey(): Promise<string | null> {
 		let ghCode : string | null = $page.url.searchParams.get('code');
 		if (ghCode==null) return localStorage.getItem('gh_key');
+
+		let oauthUrl = PUBLIC_CLIENT_SECRET ? `${PUBLIC_GH_LOGIN_URL}?client_id=${PUBLIC_CLIENT_ID}&client_secret=${PUBLIC_CLIENT_SECRET}&code=${ghCode}` : PUBLIC_GH_LOGIN_URL+'/'+ghCode;
 		
-		let r : Response = await fetch(`${PUBLIC_GH_LOGIN_URL}?client_id=${PUBLIC_CLIENT_ID}&client_secret=${PUBLIC_CLIENT_SECRET}&code=${ghCode}`, {
+		let r : Response = await fetch(oauthUrl, {
 			method: "POST",
 			headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}
 		})
@@ -43,6 +45,15 @@
 		})
 
 		return key;
+	}
+
+	if ($page.url.searchParams.get('logout')=='true') {
+		toastStore.trigger({
+			message: 'Logged out successfully!',
+			hideDismiss: true,
+			timeout: 1500,
+			background: 'variant-filled-success'
+		})
 	}
 </script>
 

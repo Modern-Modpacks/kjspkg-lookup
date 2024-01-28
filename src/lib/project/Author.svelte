@@ -2,7 +2,6 @@
 	import { base } from '$app/paths';
 	import consts from '$lib/consts';
 	import { ghApiKeyStore, ghApiLoginStore } from '$lib/stores';
-	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { IconBrandGithub, IconLogout } from '@tabler/icons-svelte';
 
 	export let author : string;
@@ -40,7 +39,7 @@
 			$ghApiKeyStore = null;
 			localStorage.removeItem('gh_key');
 			
-			location.replace(base);
+			location.replace(base+'?logout=true');
 		}}>
 			<IconLogout />
 		</button>
