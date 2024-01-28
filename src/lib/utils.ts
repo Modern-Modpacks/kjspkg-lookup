@@ -2,7 +2,7 @@ import { partial_ratio } from 'fuzzball';
 import markdownit from 'markdown-it';
 import { get } from 'svelte/store';
 import consts from './consts';
-import { packageListStore, packageStatStore } from './stores';
+import { packageListStore, packageStatStore, packageStatusStore } from './stores';
 
 // @ts-expect-error full exists, thanks crappy types
 import { full as emoji } from 'markdown-it-emoji';
@@ -63,6 +63,14 @@ export async function initPackageList(): Promise<boolean> {
 	return true;
 }
 
+export function filterPkgsByAuthor(authorCheck: string | undefined) : [string, string][] {
+	return get(packageStatusStore).search.d.filter((p : [string, string]) => {
+		const locatorInfo = p[1].match(consts.LOCATOR_REGEX)!;
+		const author = locatorInfo[1];
+		return author == authorCheck;
+	});
+}
+
 export function capitalizeFirstLetter(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -100,10 +108,10 @@ export function removeBase(target: string, base: string): string {
 	return target.replace(base, '');
 }
 
-export async function getGhInfo(path : string, key: string) : Promise<any> {
+export async function getGhInfo(path : string, key: string | null) : Promise<any> {
 	return await (await fetch(`${consts.GH_API_URL}/${path}`, {headers: {
 		'Accept': 'application/vnd.github+json',
-		'Authorization': 'Bearer '+key,
+		'Authorization': (key!=null ? 'Bearer '+key : ''),
 		'X-GitHub-Api-Version': '2022-11-28'
-	}})).json()
+	}})).json();
 }

@@ -3,11 +3,10 @@
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import consts from '$lib/consts';
-	import { Author, IconBlank, PackageList } from '$lib/index';
+	import { Author, Organizations, IconBlank, PackageList } from '$lib/index';
 	import { contextMenu } from '$lib/overlays/contextMenu';
 	import {
 		currentSearchStore,
-		ghApiKeyStore,
 		ghApiLoginStore,
 		packageListStore,
 		packageStatusStore,
@@ -15,6 +14,7 @@
 	} from '$lib/stores';
 	import {
 		filterObjectByKey,
+		filterPkgsByAuthor,
 		generateInputString,
 		initPackageList,
 		parseInputString
@@ -39,11 +39,7 @@
 	$: $packageStatusStore.search.v =
 		$packageStatusStore.search.d.length != Object.keys($packageListStore ?? {}).length;
 
-	$: filteredAuthor = $packageStatusStore.search.d.filter((p) => {
-		const locatorInfo = p[1].match(consts.LOCATOR_REGEX)!;
-		const author = locatorInfo[1];
-		return author == queryParams.author;
-	});
+	$: filteredAuthor = filterPkgsByAuthor(queryParams.author);
 
 	$: resultedFilter = queryParams.author ? filteredAuthor : $packageStatusStore.search.d;
 
@@ -206,7 +202,10 @@
 </div>
 
 {#if queryParams.author && (filteredAuthor.length > 0 || queryParams.author==$ghApiLoginStore)}
-	<Author author={queryParams.author} c={filteredAuthor.length} />
+	<div class="grid grid-cols-[1fr_min-content] items-start gap-x-2">
+		<Author author={queryParams.author} c={filteredAuthor.length} />
+		<Organizations author={queryParams.author} />
+	</div>
 {/if}
 
 {#if state == 'loading'}
