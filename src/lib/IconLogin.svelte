@@ -17,7 +17,7 @@
 		let oauthUrl = PUBLIC_CLIENT_SECRET ? `${PUBLIC_GH_LOGIN_URL}?client_id=${PUBLIC_CLIENT_ID}&client_secret=${PUBLIC_CLIENT_SECRET}&code=${ghCode}` : PUBLIC_GH_LOGIN_URL+'/'+ghCode;
 		
 		let r : Response = await fetch(oauthUrl, {
-			method: "POST",
+			method: PUBLIC_CLIENT_SECRET ? 'POST' : 'GET',
 			headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}
 		})
 		if (r.status!=200) {
