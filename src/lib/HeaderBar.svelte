@@ -17,7 +17,6 @@
 	}
 
 	let searched = getQuery();
-	let allowSettingsClick = true;
 
 	let inputElement: HTMLInputElement;
 
@@ -44,17 +43,7 @@
 					label,
 					icon: $userPreferencesStore.theme == name ? IconCheck : IconBlank,
 					action: () => {
-						allowSettingsClick = false;
-
 						document.documentElement.classList.add('color-animated');
-						setTimeout(
-							() => (
-								document.documentElement.classList.remove('color-animated'),
-								(allowSettingsClick = true)
-							),
-							2500
-						);
-
 						$userPreferencesStore.theme = name;
 						document.body.dataset.theme = $userPreferencesStore.theme ?? 'kjspkg';
 						// location.reload();
@@ -146,7 +135,6 @@
 	<svelte:fragment slot="trail">
 		<button
 			class="btn-icon hover:variant-soft-primary"
-			disabled={!allowSettingsClick}
 			use:contextMenu={settingsContextMenu}
 		>
 			<IconColorSwatch />
