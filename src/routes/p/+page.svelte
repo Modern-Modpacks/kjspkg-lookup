@@ -89,7 +89,7 @@
 			if (!res.ok) return;
 
 			const text = await res.text();
-			docs = markdown(text);
+			docs = markdown(text.replace(/(\!\[.*]\()(\.\/)(.*\))/g, `$1https://raw.githubusercontent.com/${author}/${repo}/${branch}/$3`));
 		} catch {}
 
 		try {
