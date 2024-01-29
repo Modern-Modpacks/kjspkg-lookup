@@ -7,6 +7,7 @@
 	import { contextMenu } from '$lib/overlays/contextMenu';
 	import {
 		currentSearchStore,
+		ghApiKeyStore,
 		ghApiLoginStore,
 		packageListStore,
 		packageStatusStore,
@@ -16,6 +17,7 @@
 		filterObjectByKey,
 		filterPkgsByAuthor,
 		generateInputString,
+		getNonEmptyOrgsWithPackageCount,
 		initPackageList,
 		parseInputString
 	} from '$lib/utils';
@@ -30,6 +32,8 @@
 	});
 
 	$: queryParams = parseInputString($currentSearchStore);
+	let largeScreen = matchMedia('(min-width: 1024px)').matches;
+	window.onresize = () => {largeScreen = matchMedia('(min-width: 1024px)').matches}
 
 	$: $packageStatusStore.search.d = Object.entries(
 		(!queryParams.ROOT
@@ -202,10 +206,32 @@
 </div>
 
 {#if queryParams.author && (filteredAuthor.length > 0 || queryParams.author==$ghApiLoginStore)}
-	<div class="grid grid-cols-[1fr_min-content] items-start gap-x-2">
+	<!-- {#await getNonEmptyOrgsWithPackageCount('Gcat101', $ghApiKeyStore)} -->
+	{#await getNonEmptyOrgsWithPackageCount(queryParams.author, $ghApiKeyStore)}
 		<Author author={queryParams.author} c={filteredAuthor.length} />
-		<Organizations author={queryParams.author} />
-	</div>
+	{:then orgs}
+		<div class="grid lg:grid-cols-{orgs.length>0 ? 2 : 1} items-start gap-2">
+			<div class="flex flex-col gap-2">
+				<Author author={queryParams.author} c={filteredAuthor.length} />
+				{#if largeScreen}
+					<PackageList
+						p={resultedFilter}
+						showAvatar={!queryParams.author}
+						showName={!queryParams.author}
+						showDetails={queryParams._details == 'i'}
+						sortBy={$userPreferencesStore.sortBy}
+						compact={$userPreferencesStore.compact}
+
+						maxCount={orgs.length-1}
+						customHeight={5.7}
+					/>
+				{/if}
+			</div>
+			{#if orgs.length>0}
+				<Organizations orgs={orgs} />
+			{/if}
+		</div>
+	{/await}
 {/if}
 
 {#if state == 'loading'}
@@ -239,14 +265,27 @@
 		class:md:grid-cols-2={$userPreferencesStore.compact}
 		class:lg:grid-cols-3={$userPreferencesStore.compact}
 	>
-		<PackageList
-			p={resultedFilter}
-			showAvatar={!queryParams.author}
-			showName={!queryParams.author}
-			showDetails={queryParams._details == 'i'}
-			sortBy={$userPreferencesStore.sortBy}
-			compact={$userPreferencesStore.compact}
-		/>
+		{#await getNonEmptyOrgsWithPackageCount('Gcat101', $ghApiKeyStore)}
+			<PackageList
+				p={resultedFilter}
+				showAvatar={!queryParams.author}
+				showName={!queryParams.author}
+				showDetails={queryParams._details == 'i'}
+				sortBy={$userPreferencesStore.sortBy}
+				compact={$userPreferencesStore.compact}
+			/>
+		{:then orgs}
+			<PackageList
+				p={resultedFilter}
+				showAvatar={!queryParams.author}
+				showName={!queryParams.author}
+				showDetails={queryParams._details == 'i'}
+				sortBy={$userPreferencesStore.sortBy}
+				compact={$userPreferencesStore.compact}
+
+				startFrom={largeScreen && orgs.length>0 ? orgs.length-1 : 0}
+			/>
+		{/await}
 	</dl>
 {:else if state == 'fail'}
 	<p>Something went wrong</p>

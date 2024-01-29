@@ -70,6 +70,18 @@ export function filterPkgsByAuthor(authorCheck: string | undefined) : [string, s
 		return author == authorCheck;
 	});
 }
+export async function getNonEmptyOrgsWithPackageCount(a: string, key: string | null) : Promise<any[]> {
+	let orgsWithPackageCount : any[] = [];
+	let orgs : [any] = await getGhInfo(`users/${a}/orgs`, key);
+	if (Object.keys(orgs).length==0) return [];
+
+	orgs.forEach(org => {
+		org.pkg_count = filterPkgsByAuthor(org.login).length;
+		if (org.pkg_count>0) orgsWithPackageCount.push(org);
+		// for (let i=0; i<4; i++) {if (org.pkg_count>0) orgsWithPackageCount.push(org);}
+	});
+	return orgsWithPackageCount;
+}
 
 export function capitalizeFirstLetter(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
@@ -109,9 +121,11 @@ export function removeBase(target: string, base: string): string {
 }
 
 export async function getGhInfo(path : string, key: string | null) : Promise<any> {
-	return await (await fetch(`${consts.GH_API_URL}/${path}`, {headers: {
+	let r : Response = await fetch(`${consts.GH_API_URL}/${path}`, {headers: {
 		'Accept': 'application/vnd.github+json',
 		'Authorization': (key!=null ? 'Bearer '+key : ''),
 		'X-GitHub-Api-Version': '2022-11-28'
-	}})).json();
+	}});
+	if (r.status!=200) return {};
+	return await r.json();
 }

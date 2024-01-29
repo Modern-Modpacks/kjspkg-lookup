@@ -72,7 +72,7 @@
 		<Sidebar />
 	</svelte:fragment>
 
-	<div class="container relative mx-auto max-w-screen-lg space-y-4 p-4 md:p-10 min-h-full">
+	<div class="container relative mx-auto max-w-screen-lg space-y-2 p-4 md:p-10 min-h-full">
 		{#key data.href}
 			<slot />
 		{/key}

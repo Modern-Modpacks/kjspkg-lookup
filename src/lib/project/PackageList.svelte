@@ -14,10 +14,12 @@
 	/** name and author are sorted alphabetically. */
 	export let sortBy: '' | 'name' | 'author' | 'downloads' | 'views' = '';
 	export let maxCount = Infinity;
+	export let startFrom = 0;
 	export let showAvatar = true;
 	export let showDetails = true;
 	export let showName = true;
 	export let compact = false;
+	export let customHeight : number | null = null;
 
 	$: sortedP = (() => {
 		const alphabetic = [...p].sort((_a, _b) => {
@@ -52,7 +54,7 @@
 	})();
 </script>
 
-{#each [...sortedP].slice(0, maxCount) as [name, locator], i (name)}
+{#each [...sortedP].slice(startFrom, maxCount) as [name, locator], i (name)}
 	{@const locatorInfo = locator.match(consts.LOCATOR_REGEX) ?? [null, null, null, null, null]}
 	{@const author = locatorInfo[1]}
 	{@const repo = locatorInfo[2]}
@@ -70,6 +72,7 @@
 		class:!variant-filled-primary={$page.url.searchParams.get('id') == name}
 		animate:flip={{ duration: 500 }}
 		transition:fade={{ duration: 300 }}
+		style={customHeight!=null ? `height: ${customHeight}rem` : ''}
 	>
 		{#if showAvatar && !compact}
 			<img
