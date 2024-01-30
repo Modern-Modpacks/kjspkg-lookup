@@ -73,7 +73,7 @@
             })()}
             <a
                 class="btn-icon hover:scale-110 hover:brightness-100 duration-300"
-                href="{base}/s/?q=@author:{user['login']}"
+                href="{base}/me"
             >
                 <img class="rounded-full" src={user['avatar_url']} alt="avatar">
             </a>
