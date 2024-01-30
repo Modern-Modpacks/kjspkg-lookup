@@ -214,17 +214,19 @@
 			<div class="flex flex-col gap-2">
 				<Author author={queryParams.author} c={filteredAuthor.length} />
 				{#if largeScreen}
-					<PackageList
-						p={resultedFilter}
-						showAvatar={!queryParams.author}
-						showName={!queryParams.author}
-						showDetails={queryParams._details == 'i'}
-						sortBy={$userPreferencesStore.sortBy}
-						compact={$userPreferencesStore.compact}
+					<div class="grid grid-cols-2 gap-2">
+						<PackageList
+							p={resultedFilter}
+							showAvatar={!queryParams.author}
+							showName={!queryParams.author}
+							showDetails={queryParams._details == 'i'}
+							sortBy={$userPreferencesStore.sortBy}
+							compact={$userPreferencesStore.compact}
 
-						maxCount={orgs.length-1}
-						customHeight={5.7}
-					/>
+							maxCount={Math.max(orgs.length-1, 0)}
+							customHeight={5.7}
+						/>
+					</div>
 				{/if}
 			</div>
 			{#if orgs.length>0}
@@ -265,27 +267,36 @@
 		class:md:grid-cols-2={$userPreferencesStore.compact}
 		class:lg:grid-cols-3={$userPreferencesStore.compact}
 	>
-		{#await getNonEmptyOrgsWithPackageCount('Gcat101', $ghApiKeyStore)}
-			<PackageList
-				p={resultedFilter}
-				showAvatar={!queryParams.author}
-				showName={!queryParams.author}
-				showDetails={queryParams._details == 'i'}
-				sortBy={$userPreferencesStore.sortBy}
-				compact={$userPreferencesStore.compact}
-			/>
-		{:then orgs}
-			<PackageList
-				p={resultedFilter}
-				showAvatar={!queryParams.author}
-				showName={!queryParams.author}
-				showDetails={queryParams._details == 'i'}
-				sortBy={$userPreferencesStore.sortBy}
-				compact={$userPreferencesStore.compact}
+		{#if queryParams.author!=null}
+			{#await getNonEmptyOrgsWithPackageCount(queryParams.author, $ghApiKeyStore)}
+				<PackageList
+					p={resultedFilter}
+					showAvatar={false}
+					showName={false}
+					showDetails={queryParams._details == 'i'}
+					sortBy={$userPreferencesStore.sortBy}
+					compact={$userPreferencesStore.compact}
+				/>
+			{:then orgs}
+				<PackageList
+					p={resultedFilter}
+					showAvatar={false}
+					showName={false}
+					showDetails={queryParams._details == 'i'}
+					sortBy={$userPreferencesStore.sortBy}
+					compact={$userPreferencesStore.compact}
 
-				startFrom={largeScreen && orgs.length>0 ? orgs.length-1 : 0}
+					startFrom={largeScreen && orgs.length>0 ? orgs.length-1 : 0}
+				/>
+			{/await}
+		{:else}
+			<PackageList
+				p={resultedFilter}
+				showDetails={queryParams._details == 'i'}
+				sortBy={$userPreferencesStore.sortBy}
+				compact={$userPreferencesStore.compact}
 			/>
-		{/await}
+		{/if}
 	</dl>
 {:else if state == 'fail'}
 	<p>Something went wrong</p>
