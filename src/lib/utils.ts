@@ -62,6 +62,14 @@ export async function initPackageList(): Promise<boolean> {
 
 	return true;
 }
+export async function isAutomatinUp(): Promise<Boolean> {
+	try {
+		await fetch(consts.AUTOMATIN_URL);
+		return true;
+	} catch (err) {
+		return false;
+	}
+}
 
 export function filterPkgsByAuthor(authorCheck: string | undefined) : [string, string][] {
 	return get(packageStatusStore).search.d.filter((p : [string, string]) => {

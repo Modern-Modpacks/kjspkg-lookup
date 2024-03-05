@@ -19,6 +19,7 @@
 		generateInputString,
 		getNonEmptyOrgsWithPackageCount,
 		initPackageList,
+		isAutomatinUp,
 		parseInputString
 	} from '$lib/utils';
 	import { IconCheck, IconClearAll, IconHome, IconLayoutDashboard } from '@tabler/icons-svelte';
@@ -64,7 +65,7 @@
 	<title>{$currentSearchStore || 'Search'} - KJSPKG Lookup</title>
 </svelte:head>
 
-<div class="flex flex-wrap gap-2">
+<div class="flex flex-wrap gap-2 mb-2">
 	{#if $currentSearchStore}
 		<button
 			class="variant-soft-secondary btn w-fit hover:variant-filled-primary"
@@ -96,8 +97,17 @@
 	</button>
 </div>
 
+{#await isAutomatinUp() then automatinUp}
+	{#if !automatinUp}
+		<div class="variant-filled-error rounded p-2 px-3">
+			<h1 class="h4 font-bold">Our statistics database seems to be down ¯\_(ツ)_/¯</h1>
+			<p>Download and view counts might be missing. Please report this to <a class="anchor" href={consts.DISCORD_URL}>our Discord server</a>.</p>
+		</div>
+	{/if}
+{/await}
+
 <div
-	class="sticky top-[-1px] z-10 justify-between border-surface-600 bg-surface-900 p-2 pt-[calc(1rem_+_1px)] backdrop-blur rounded-bl-container-token rounded-br-container-token md:flex"
+	class="sticky top-[-1px] z-10 justify-between border-surface-600 bg-surface-900 p-2 backdrop-blur rounded-bl-container-token rounded-br-container-token md:flex"
 	bind:this={optionsHeader}
 >
 	<h1 class="h3">
