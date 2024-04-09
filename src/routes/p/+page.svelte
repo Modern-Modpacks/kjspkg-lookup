@@ -79,7 +79,7 @@
 		issueLink = `https://github.com/${author}/${repo}/issues`;
 		docLoc = `https://github.com/${author}/${repo}/blob/${branch}${path}/README.md`;
 
-		try {
+		(() => { try {
 			const targetUrl = docLoc.replace(
 				new RegExp(consts.DOCS_URL_REGEX),
 				'raw.githubusercontent.com/$1/$2'
@@ -90,7 +90,7 @@
 
 			const text = await res.text();
 			docs = markdown(text.replace(/(\!\[.*]\()(\.\/)(.*\))/g, `$1https://raw.githubusercontent.com/${author}/${repo}/${branch}/$3`));
-		} catch {}
+		} catch {} })()
 
 		try {
 			const res = await fetch(consts.AUTOMATIN_URL + `?stat=views&id=${id}`, { method: 'PUT' });
