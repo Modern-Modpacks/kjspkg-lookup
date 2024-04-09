@@ -181,7 +181,7 @@
 							name: 'downloads'
 						},
 						{
-							label: 'Views',
+							label: 'View count',
 							name: 'views'
 						}
 					].map(({ label, name }) => ({
