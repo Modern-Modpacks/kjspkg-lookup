@@ -79,7 +79,7 @@
 		issueLink = `https://github.com/${author}/${repo}/issues`;
 		docLoc = `https://github.com/${author}/${repo}/blob/${branch}${path}/README.md`;
 
-		(() => { try {
+		(async () => { try {
 			const targetUrl = docLoc.replace(
 				new RegExp(consts.DOCS_URL_REGEX),
 				'raw.githubusercontent.com/$1/$2'
