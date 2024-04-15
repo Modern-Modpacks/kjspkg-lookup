@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import consts from '$lib/consts';
-	import { packageStatStore } from '$lib/stores';
+	import { langKeyStore, packageStatStore } from '$lib/stores';
 	import { packageNameToReadableFormat } from '$lib/utils';
 	import { createEventDispatcher } from 'svelte';
 	import { flip } from 'svelte/animate';
@@ -86,22 +86,22 @@
 			<dt class="mb-1 select-text font-bold">{packageNameToReadableFormat(name)}</dt>
 			<dd class="text-sm opacity-50">
 				{#if branch && showDetails}
-					on branch <span class="select-text">{branch.substring(1)}</span>
+					{$langKeyStore['list.detailed.on_branch']} <span class="select-text">{branch.substring(1)}</span>
 				{/if}
 				{#if path && showDetails}
-					at path <span class="select-text">{path.substring(1)}</span>
+					{$langKeyStore['list.detailed.at_path']} <span class="select-text">{path.substring(1)}</span>
 				{/if}
 				{#if name != repo && showDetails}
-					in repo <span class="select-text">{repo}</span>
+					{$langKeyStore['list.detailed.in_repo']} <span class="select-text">{repo}</span>
 				{/if}
 
 				{#if showName}
-					by <span class="select-text">{author}</span>
+					{$langKeyStore['list.by']} <span class="select-text">{author}</span>
 				{/if}
 			</dd>
 			<dd class="text-sm opacity-50">
-				<span>{statDownloads} download{statDownloads == 1 ? '' : 's'}</span> &bull;
-				<span>{statViews} view{statViews == 1 ? '' : 's'}</span>
+				<span>{statDownloads} {statDownloads == 1 ? $langKeyStore['list.download_singluar'] : $langKeyStore['list.download_plural']}</span> &bull;
+				<span>{statViews} {statViews == 1 ? $langKeyStore['list.view_singular'] : $langKeyStore['list.view_plural']}</span>
 			</dd>
 		</dl>
 	</a>

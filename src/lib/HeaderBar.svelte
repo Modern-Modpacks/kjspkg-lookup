@@ -4,11 +4,11 @@
 	import { page } from '$app/stores';
 	import { IconBlank } from '$lib';
 	import { AppBar } from '@skeletonlabs/skeleton';
-	import { IconCheck, IconColorSwatch, IconSearch, IconUser } from '@tabler/icons-svelte';
+	import { IconCheck, IconColorSwatch, IconSearch, IconWorld } from '@tabler/icons-svelte';
 	import consts from './consts';
 	import { contextMenu, type ContextMenuItem } from './overlays/contextMenu';
-	import { currentScrollPosition, currentSearchStore, userPreferencesStore } from './stores';
-	import { parseInputString } from './utils';
+	import { currentScrollPosition, currentSearchStore, langKeyStore, userPreferencesStore } from './stores';
+	import { getLangKeys, getLangs, parseInputString } from './utils';
 	import { fly } from 'svelte/transition';
 	import IconLogin from './IconLogin.svelte';
 
@@ -17,15 +17,34 @@
 	}
 
 	let searched = getQuery();
+	let langs = getLangs();
 
 	let inputElement: HTMLInputElement;
 
 	afterNavigate(() => (searched = getQuery()));
 
-	$: settingsContextMenu = {
+	$: langContextMenu = {
 		initiator: 'left' as const,
 		items: [
-			{ type: 'SEPARATOR', header: 'Theme' },
+			{ type: 'SEPARATOR', header: $langKeyStore['menu.language'] },
+
+			...Object.keys(langs).map(lang => {
+				return {
+					type: 'ITEM' as const,
+					label: langs[lang],
+					icon: $userPreferencesStore.locale == lang ? IconCheck : IconBlank,
+					action: () => {
+						$userPreferencesStore.locale = lang;
+						$langKeyStore = getLangKeys();
+					}
+				};
+			})
+		] as ContextMenuItem[]
+	};
+	$: themeContextMenu = {
+		initiator: 'left' as const,
+		items: [
+			{ type: 'SEPARATOR', header: $langKeyStore['menu.theme'] },
 
 			...[
 				{ label: 'KJSPKG', name: 'kjspkg' },
@@ -119,7 +138,7 @@
 
 			<input
 				type="search"
-				placeholder="Search for packages"
+				placeholder={$langKeyStore['search.placeholder']}
 				bind:this={inputElement}
 				bind:value={searched}
 				on:input={() => ($currentSearchStore = searched)}
@@ -135,7 +154,13 @@
 	<svelte:fragment slot="trail">
 		<button
 			class="btn-icon hover:variant-soft-primary"
-			use:contextMenu={settingsContextMenu}
+			use:contextMenu={langContextMenu}
+		>
+			<IconWorld />
+		</button>
+		<button
+			class="btn-icon hover:variant-soft-primary"
+			use:contextMenu={themeContextMenu}
 		>
 			<IconColorSwatch />
 		</button>

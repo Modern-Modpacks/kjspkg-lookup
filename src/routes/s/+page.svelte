@@ -9,6 +9,7 @@
 		currentSearchStore,
 		ghApiKeyStore,
 		ghApiLoginStore,
+		langKeyStore,
 		packageListStore,
 		packageStatusStore,
 		userPreferencesStore
@@ -24,6 +25,7 @@
 	} from '$lib/utils';
 	import { IconCheck, IconClearAll, IconHome, IconLayoutDashboard } from '@tabler/icons-svelte';
 	import { onMount } from 'svelte';
+	import { vsprintf } from 'sprintf-js';
 
 	let state: 'loading' | 'ready' | 'fail' = $packageListStore == undefined ? 'loading' : 'ready';
 
@@ -72,7 +74,7 @@
 			on:click={() => goto(base + '/s')}
 		>
 			<IconClearAll class="mr-2" />
-			Clear filters
+			{$langKeyStore['search.clear_filters']}
 		</button>
 	{/if}
 	<button
@@ -80,11 +82,11 @@
 		on:click={() => ($userPreferencesStore.compact = !$userPreferencesStore.compact)}
 	>
 		<IconLayoutDashboard class="mr-2" />
-		<span class="inline md:hidden">
+		<!-- <span class="inline md:hidden">
 			{$userPreferencesStore.compact ? 'Show icons' : 'Hide icons'}
-		</span>
+		</span> -->
 		<span class="hidden md:inline">
-			{$userPreferencesStore.compact ? 'Use list view' : 'Use compact view'}
+			{$userPreferencesStore.compact ? $langKeyStore['search.use_view.list'] : $langKeyStore['search.use_view.compact']}
 		</span>
 	</button>
 </div>
@@ -92,8 +94,8 @@
 {#await isAutomatinUp() then automatinUp}
 	{#if !automatinUp}
 		<div class="variant-filled-error rounded p-2 px-3">
-			<h1 class="h4 font-bold">Our statistics database seems to be down ¯\_(ツ)_/¯</h1>
-			<p>Download and view counts might be missing. Please report this to <a class="anchor" href={consts.DISCORD_URL}>our Discord server</a>.</p>
+			<h1 class="h4 font-bold">{$langKeyStore['errors.automatin_down']} ¯\_(ツ)_/¯</h1>
+			<p>{$langKeyStore['errors.automatin_down.details']} <a class="anchor" href={consts.DISCORD_URL}>{$langKeyStore['errors.automatin_down.server']}</a>.</p>
 		</div>
 	{/if}
 {/await}
@@ -104,12 +106,11 @@
 >
 	<h1 class="h3">
 		{#if !$currentSearchStore}
-			Found <span>{$packageStatusStore.search.d.length}</span> packages
+			{@html vsprintf($langKeyStore['search.found_plural'], [$packageStatusStore.search.d.length])} {$langKeyStore['search.package_plural']}
 		{:else}
-			Found
-			<span>{resultedFilter.length}</span>
+			{@html vsprintf(resultedFilter.length == 1 ? $langKeyStore['search.found_singular'] : $langKeyStore['search.found_plural'], [resultedFilter.length])}
 			<a href="{base}/s" class="anchor no-underline">
-				{resultedFilter.length == 1 ? 'package' : 'packages'}
+				{resultedFilter.length == 1 ? $langKeyStore['search.package_singular'] : $langKeyStore['search.package_plural']}
 			</a>
 
 			{#if queryParams.author && (filteredAuthor.length > 0 || queryParams.author==$ghApiLoginStore)}
@@ -121,11 +122,11 @@
 						goto(`${base}/s?q=${generateInputString(q)}`);
 					}}
 				>
-					made by {queryParams.author}
+					{$langKeyStore['search.made_by']} {queryParams.author}
 				</button>
 			{/if}
 			{#if queryParams.ROOT != ''}
-				matching
+				{$langKeyStore['search.matching']}
 				<button
 					class="transition-all hover:variant-filled-error hover:rounded hover:p-1 hover:px-2 hover:line-through"
 					on:click={() => {
@@ -146,7 +147,7 @@
 						goto(`${base}/s?q=${generateInputString(q)}`);
 					}}
 				>
-					(detailed)
+					({$langKeyStore['search.detailed']})
 				</button>
 			{/if}
 		{/if}
@@ -160,25 +161,13 @@
 				items: [
 					// @ts-expect-error me lazy. be like me.
 					...[
-						{
-							label: 'Name (a-z)',
-							name: 'name'
-						},
-						{
-							label: 'Author (a-z)',
-							name: 'author'
-						},
-						{
-							label: 'Download count',
-							name: 'downloads'
-						},
-						{
-							label: 'View count',
-							name: 'views'
-						}
-					].map(({ label, name }) => ({
+						'name',
+						'author',
+						'downloads',
+						'views'
+					].map(name  => ({
 						type: 'ITEM',
-						label,
+						label: $langKeyStore[`search.sort_type.${name}`],
 						icon: $userPreferencesStore.sortBy == name ? IconCheck : IconBlank,
 						// @ts-expect-error me lazy. be like me.
 						action: () => ($userPreferencesStore.sortBy = name)
@@ -188,7 +177,7 @@
 					{
 						// @ts-expect-error me lazy. be like me.
 						type: 'ITEM',
-						label: 'Show details',
+						label: $langKeyStore[`search.show_details`],
 						icon: queryParams._details == 'i' ? IconCheck : IconBlank,
 						action: () => {
 							let q = queryParams;
@@ -201,7 +190,7 @@
 			}}
 		>
 			{$userPreferencesStore.sortBy != ''
-				? `Sorted by ${$userPreferencesStore.sortBy}`
+				? `${$langKeyStore['search.sorted_by']} ${$langKeyStore[`search.sorted_by.${$userPreferencesStore.sortBy}`]}`
 				: 'Unsorted'}
 		</button>
 	</div>
@@ -250,17 +239,11 @@
 		{/each}
 	</dl>
 {:else if state == 'ready' && resultedFilter.length == 0}
-	{#if queryParams.author!=$ghApiLoginStore}
-		<p>Here, have a cookie, if that makes you feel any better: 🍪</p>
-		<p class="text-sm opacity-50">
-			Fun fact: You can use '@author:name' to view packages made by an author. What 'bout using
-			'@details' to get technical details on each package?
-		</p>
+	{#if queryParams.author!=$ghApiLoginStore || queryParams.author==undefined}
+		<p>{$langKeyStore['errors.package_not_found']}</p>
+		<p class="text-sm opacity-50">{$langKeyStore['errors.package_not_found.details']}</p>
 	{:else}
-		<p class="opacity-50 text-center">
-			Looks like you don't have any approved packages published to KJSPKG.
-			How sad!
-		</p>
+		<p class="opacity-50 text-center">{$langKeyStore['errors.no_packages_published']}</p>
 	{/if}
 {:else if state == 'ready'}
 	<dl
@@ -301,5 +284,5 @@
 		{/if}
 	</dl>
 {:else if state == 'fail'}
-	<p>Something went wrong</p>
+	<p>{$langKeyStore['errors.something_went_wrong']}</p>
 {/if}

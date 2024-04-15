@@ -1,5 +1,6 @@
 import { localStorageStore } from '@skeletonlabs/skeleton';
 import { writable } from 'svelte/store';
+import { getLangKeys, getLangs } from './utils';
 
 export const packageListStore = writable<{ [key: string]: string } | undefined>();
 export const packageStatStore = writable<{
@@ -24,14 +25,18 @@ export const ghApiLoginStore = writable<string | null>(null);
 
 export const userPreferencesStore = localStorageStore<{
 	sortBy: '' | 'name' | 'author' | 'downloads' | 'views';
+	locale: string;
 	theme: string;
 	lightMode: boolean;
 	compact: boolean;
 	alreadyVisited: boolean;
 }>('preferences', {
 	sortBy: 'name',
+	locale: Object.keys(getLangs()).includes(navigator.language) ? navigator.language : 'en-US',
 	theme: 'kjspkg',
 	lightMode: false,
 	compact: false,
 	alreadyVisited: true
 });
+
+export const langKeyStore = writable<{ [key: string]: string }>(getLangKeys())

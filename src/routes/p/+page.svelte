@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 	import { Dependency, ManagePackage } from '$lib';
 	import consts from '$lib/consts';
-	import { currentAuthorStore, packageListStore, packageStatStore } from '$lib/stores';
+	import { currentAuthorStore, langKeyStore, packageListStore, packageStatStore } from '$lib/stores';
 	import {
 		capitalizeFirstLetter,
 		initPackageList,
@@ -132,8 +132,8 @@
 			{@html markdownInline(thisPackage.description)}
 		</span>
 		<span class="text-sm opacity-50">
-			<span>{statDownloads} download{statDownloads == 1 ? '' : 's'}</span> &bull;
-			<span>{statViews} view{statViews == 1 ? '' : 's'}</span>
+			<span>{statDownloads} {statDownloads == 1 ? $langKeyStore['list.download_singluar'] : $langKeyStore['list.download_plural']}</span> &bull;
+			<span>{statViews} {statViews == 1 ? $langKeyStore['list.view_singular'] : $langKeyStore['list.view_plural']}</span>
 		</span>
 	</div>
 
@@ -149,7 +149,7 @@
 				class="my-auto mr-4 aspect-square h-8 rounded-token"
 			/>
 			<dl>
-				<dt class="text-sm opacity-50">Created by</dt>
+				<dt class="text-sm opacity-50">{$langKeyStore['package.created_by']}</dt>
 				<dd class="select-text font-bold">
 					{thisPackage.author}
 					{locatorInfo[1] != thisPackage.author ? `(${locatorInfo[1]})` : ''}
@@ -158,7 +158,7 @@
 		</a>
 
 		<div class="card p-4" in:fly={{ y: 20 }}>
-			<dt class="text-sm opacity-50">Available for</dt>
+			<dt class="text-sm opacity-50">{$langKeyStore['package.available_for']}</dt>
 			<dd class="flex flex-wrap gap-1">
 				{#each thisPackage.modloaders as t}
 					<span class="variant-filled-primary badge select-text">{capitalizeFirstLetter(t)}</span>
@@ -178,7 +178,7 @@
 		/> -->
 
 		<div class="card hidden space-y-2 p-4 md:block" in:fly={{ y: 20 }}>
-			<dt class="text-sm opacity-50">Manage package (click to copy)</dt>
+			<dt class="text-sm opacity-50">{$langKeyStore['package.manage_package']}</dt>
 			<dd class="flex flex-col gap-1">
 				<ManagePackage name={id ?? 'no-name'} link={issueLink} />
 			</dd>
@@ -187,7 +187,7 @@
 		{#if thisPackage.dependencies.length > 0 || thisPackage.incompatibilities.length > 0}
 			<div class="card h-fit space-y-2 p-4" in:fly|global={{ y: 20 }}>
 				{#if thisPackage.dependencies.length > 0}
-					<dt class="text-sm opacity-50">Depends on</dt>
+					<dt class="text-sm opacity-50">{$langKeyStore['package.depends_on']}</dt>
 					<dd class="flex w-full gap-1">
 						<dl class="list-dl w-full">
 							{#each thisPackage.dependencies as t}
@@ -197,7 +197,7 @@
 					</dd>
 				{/if}
 				{#if thisPackage.incompatibilities.length > 0}
-					<dt class="text-sm opacity-50">Incompatible with</dt>
+					<dt class="text-sm opacity-50">{$langKeyStore['package.incompatible_with']}</dt>
 					<dd class="flex w-full gap-1">
 						<dl class="list-dl w-full">
 							{#each thisPackage.incompatibilities as t}
@@ -212,7 +212,7 @@
 		{#if docs != ''}
 			<section class="card h-fit space-y-4 p-4 lg:col-span-2" in:fly={{ y: 20 }}>
 				<dt class="text-sm opacity-50">
-					<a href={docLoc} class="underline" target="_blank">README file</a>
+					<a href={docLoc} class="underline" target="_blank">{$langKeyStore['package.readme_file']}</a>
 				</dt>
 				<dd class="style-markdown flex select-text flex-col items-start *:select-text">
 					{@html docs}

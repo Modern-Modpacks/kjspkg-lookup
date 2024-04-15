@@ -41,8 +41,10 @@
 		"@types/dom-view-transitions": "^1.0.4",
 		"@types/markdown-it": "^13.0.7",
 		"@types/markdown-it-emoji": "^2.0.4",
+		"@types/sprintf-js": "^1.1.4",
 		"fuzzball": "^2.1.2",
 		"markdown-it": "^14.0.0",
-		"markdown-it-emoji": "^3.0.0"
+		"markdown-it-emoji": "^3.0.0",
+		"sprintf-js": "^1.1.3"
 	}
 }

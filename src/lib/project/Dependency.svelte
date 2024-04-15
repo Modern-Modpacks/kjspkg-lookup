@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { contextMenu } from '$lib/overlays/contextMenu';
-	import { packageListStore } from '$lib/stores';
+	import { langKeyStore, packageListStore } from '$lib/stores';
 	import { packageNameToReadableFormat } from '$lib/utils';
 	import { popup } from '@skeletonlabs/skeleton';
 	import { IconPackage, IconPuzzle } from '@tabler/icons-svelte';
@@ -20,7 +20,7 @@
 		use:contextMenu={{
 			initiator: 'left',
 			items: [
-				{ type: 'SEPARATOR', header: 'Open in' },
+				{ type: 'SEPARATOR', header: $langKeyStore['package.dependency.mod_open_in'] },
 				{
 					type: 'ITEM',
 					label: 'Modrinth',
@@ -42,7 +42,7 @@
 		<IconPuzzle />
 		<span class="flex-auto">
 			<dt class="select-text font-bold">{t.split(':')[1]}</dt>
-			<dd class="text-sm opacity-50">external mod</dd>
+			<dd class="text-sm opacity-50">{$langKeyStore['package.dependency.external_mod']}</dd>
 		</span>
 	</button>
 {:else}
@@ -55,7 +55,7 @@
 		<IconPackage />
 		<span class="flex-auto">
 			<dt class="select-text font-bold">{packageNameToReadableFormat(t)}</dt>
-			<dd class="text-sm opacity-50">KJS package</dd>
+			<dd class="text-sm opacity-50">{$langKeyStore['package.dependency.kjs_package']}</dd>
 		</span>
 	</a>
 

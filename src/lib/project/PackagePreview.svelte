@@ -1,6 +1,6 @@
 <script lang="ts">
 	import consts from '$lib/consts';
-	import { packageStatStore } from '$lib/stores';
+	import { langKeyStore, packageStatStore } from '$lib/stores';
 	import { markdownInline } from '$lib/utils';
 	import { onMount } from 'svelte';
 
@@ -51,7 +51,7 @@
 	style="opacity: 0;"
 >
 	<dl>
-		<dt class="text-sm opacity-50">Package preview</dt>
+		<dt class="text-sm opacity-50">{$langKeyStore['package.package_preview']}</dt>
 		{#if state == 'loading'}
 			<dd
 				class="style-markdown blockquote flex flex-col gap-1 border-l-primary-500 p-4 *:pointer-events-none"
@@ -69,9 +69,9 @@
 			>
 				<span>{@html markdownInline(thisPackage.description)}</span>
 				<span class="select-none text-sm opacity-50">
-					<span>{statDownloads} downloads</span> &bull;
-					<span>{statViews} views</span> &bull;
-					<span>by {locatorInfo[1]}</span>
+					<span>{statDownloads} {statDownloads == 1 ? $langKeyStore['list.download_singluar'] : $langKeyStore['list.download_plural']}</span> &bull;
+					<span>{statViews} {statViews == 1 ? $langKeyStore['list.view_singular'] : $langKeyStore['list.view_plural']}</span> &bull;
+					<span>{$langKeyStore['list.by']} {locatorInfo[1]}</span>
 				</span>
 			</dd>
 		{:else if state == 'fail'}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import consts from '$lib/consts';
-	import { ghApiKeyStore, ghApiLoginStore } from '$lib/stores';
+	import { ghApiKeyStore, ghApiLoginStore, langKeyStore } from '$lib/stores';
 	import { IconBrandGithub, IconLogout } from '@tabler/icons-svelte';
 
 	export let author : string;
@@ -22,10 +22,10 @@
 		<dt class="font-bold select-text">{author}</dt>
 		<dd class="text-sm opacity-50">
 			{#if author!=$ghApiLoginStore}
-				owns {c}
-				{c == 1 ? 'package' : 'packages'}
+				{$langKeyStore['author.owns']} {c}
+				{$langKeyStore[c == 1 ? 'author.package_singular' : 'author.package_plural']}
 			{:else if author==$ghApiLoginStore}
-				is you!
+				{$langKeyStore['author.you']}
 			{/if}
 		</dd>
 	</dl>

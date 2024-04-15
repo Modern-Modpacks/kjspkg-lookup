@@ -2,11 +2,12 @@ import { partial_ratio } from 'fuzzball';
 import markdownit from 'markdown-it';
 import { get } from 'svelte/store';
 import consts from './consts';
-import { packageListStore, packageStatStore, packageStatusStore } from './stores';
+import { packageListStore, packageStatStore, packageStatusStore, userPreferencesStore } from './stores';
 
 // @ts-expect-error full exists, thanks crappy types
 import { full as emoji } from 'markdown-it-emoji';
 
+const langs = import.meta.glob("../lang/*.json", { eager: true, import: 'default' })
 const md = markdownit({
 	html: false,
 	xhtmlOut: false,
@@ -19,6 +20,19 @@ const md = markdownit({
 		return '';
 	}
 }).use(emoji);
+
+export function getLangs(): { [key: string]: string } {
+	let langsWithNames : { [key: string]: string } = {};
+	for(let l of Object.keys(langs))
+		langsWithNames[l.split('/').at(-1)?.replace('.json', '') ?? ''] = (langs[l] as { [key: string]: string })['name'];
+	return langsWithNames;
+}
+export function getLangKeys(): { [key: string]: string } {
+	let localeKeys = langs[`../lang/${get(userPreferencesStore).locale}.json`] as Module;
+	let enKeys = langs['../lang/en-US.json'] as Module;
+
+	return {...(enKeys as object), ...(localeKeys as object)};
+}
 
 export function filterObjectByKey(
 	obj: { [key: string]: string },
@@ -122,6 +136,7 @@ export function markdown(str: string): string {
 }
 
 import { generateInputString, parseInputString } from './argparse';
+import type Module from 'module';
 export { generateInputString, parseInputString };
 
 export function removeBase(target: string, base: string): string {
