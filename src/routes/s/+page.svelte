@@ -74,14 +74,6 @@
 			<IconClearAll class="mr-2" />
 			Clear filters
 		</button>
-	{:else}
-		<button
-			class="variant-soft-secondary btn w-fit hover:variant-filled-primary"
-			on:click={() => goto(base + '/home')}
-		>
-			<IconHome class="mr-2" />
-			Go home
-		</button>
 	{/if}
 	<button
 		class="variant-soft-secondary btn w-fit hover:variant-filled-primary"
