@@ -39,4 +39,4 @@ export const userPreferencesStore = localStorageStore<{
 	alreadyVisited: true
 });
 
-export const langKeyStore = writable<{ [key: string]: string }>(getLangKeys())
+export const langKeyStore = writable<{ [key: string]: string }>(getLangKeys());

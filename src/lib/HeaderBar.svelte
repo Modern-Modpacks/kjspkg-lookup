@@ -8,7 +8,7 @@
 	import consts from './consts';
 	import { contextMenu, type ContextMenuItem } from './overlays/contextMenu';
 	import { currentScrollPosition, currentSearchStore, langKeyStore, userPreferencesStore } from './stores';
-	import { getLangKeys, getLangs, parseInputString } from './utils';
+	import { getLangKeys, getLangs, memeLangCount, parseInputString } from './utils';
 	import { fly } from 'svelte/transition';
 	import IconLogin from './IconLogin.svelte';
 
@@ -19,6 +19,19 @@
 	let searched = getQuery();
 	let langs = getLangs();
 
+	let langElements : ContextMenuItem[];
+	$: langElements = Object.keys(langs).map(lang => {
+		return {
+			type: 'ITEM',
+			label: langs[lang],
+			icon: $userPreferencesStore.locale == lang ? IconCheck : IconBlank,
+			action: () => {
+				$userPreferencesStore.locale = lang;
+				$langKeyStore = getLangKeys();
+			}
+		};
+	});
+
 	let inputElement: HTMLInputElement;
 
 	afterNavigate(() => (searched = getQuery()));
@@ -28,17 +41,7 @@
 		items: [
 			{ type: 'SEPARATOR', header: $langKeyStore['menu.language'] },
 
-			...Object.keys(langs).map(lang => {
-				return {
-					type: 'ITEM' as const,
-					label: langs[lang],
-					icon: $userPreferencesStore.locale == lang ? IconCheck : IconBlank,
-					action: () => {
-						$userPreferencesStore.locale = lang;
-						$langKeyStore = getLangKeys();
-					}
-				};
-			})
+			...[...[...langElements.slice(0, 1), { type: 'SEPARATOR' }, ...langElements.slice(1, (memeLangCount ? -memeLangCount : undefined))], ...(memeLangCount ? [{ type: 'SEPARATOR' }, ...langElements.slice(-memeLangCount)] : [])]
 		] as ContextMenuItem[]
 	};
 	$: themeContextMenu = {

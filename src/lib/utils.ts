@@ -7,7 +7,7 @@ import { packageListStore, packageStatStore, packageStatusStore, userPreferences
 // @ts-expect-error full exists, thanks crappy types
 import { full as emoji } from 'markdown-it-emoji';
 
-const langs = import.meta.glob("../lang/*.json", { eager: true, import: 'default' })
+const langs = import.meta.glob('../lang/*.json', { eager: true, import: 'default' })
 const md = markdownit({
 	html: false,
 	xhtmlOut: false,
@@ -21,9 +21,12 @@ const md = markdownit({
 	}
 }).use(emoji);
 
+export let memeLangCount = 0;
+Object.keys(langs).forEach(l => {if (l.startsWith("../lang/_")) memeLangCount++});
+
 export function getLangs(): { [key: string]: string } {
 	let langsWithNames : { [key: string]: string } = {};
-	for(let l of Object.keys(langs))
+	for(let l of Object.keys(langs).sort((a, b) => a=='../lang/en-US.json' ? -1 : (b.startsWith('../lang/_') ? -1 : 0)))
 		langsWithNames[l.split('/').at(-1)?.replace('.json', '') ?? ''] = (langs[l] as { [key: string]: string })['name'];
 	return langsWithNames;
 }
