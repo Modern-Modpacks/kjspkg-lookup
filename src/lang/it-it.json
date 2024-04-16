@@ -2,9 +2,9 @@
     "name": "Italiano",
 
     "errors.something_went_wrong": "Qualcosa è andato storto",
-    "errors.package_not_found": "Here, have a cookie, if that makes you feel any better: 🍪",
-    "errors.package_not_found.details": "Fun fact: You can use '@author:name' to view packages made by an author. What 'bout using '@details' to get technical details on each package?",
-    "errors.no_packages_published": "Looks like you don't have any approved packages published to KJSPKG. How sad!",
+    "errors.package_not_found": "Tieni , prendi un biscotto , se può farti sentire meglio : 🍪",
+    "errors.package_not_found.details": "Curiosità : Puoi usare '@author:name' per filtrare via autore . What 'bout using '@details' to get technical details on each package?",
+    "errors.no_packages_published": "Sembra che non tu abbia ancora un progetto pubblicato su KJSPKG. Male!",
     "errors.automatin_down": "I nostri database sembrano offline",
     "errors.automatin_down.details": "Download and view counts might be missing. Please report this to",
     "errors.automatin_down.server": "Nostro server Discord",
