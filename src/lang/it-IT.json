@@ -12,11 +12,11 @@
     "menu.language": "Lingua",
     "menu.theme": "Tema",
 
-    "list.by": "per",
+    "list.by": "creato da",
     "list.detailed.on_branch": "per ramo",
     "list.detailed.at_path": "per percorso",
-    "list.detailed.in_repo": "in repo",
-    "list.download_singluar": "scarica",
+    "list.detailed.in_repo": "repository",
+    "list.download_singluar": "download",
     "list.download_plural": "downloads",
     "list.view_singular": "visualizzazione",
     "list.view_plural": "visualizzazioni",
@@ -35,7 +35,7 @@
     "search.package_plural": "pacchetti",
     "search.found_singular": "Trovato <span>%d</span>",
     "search.found_plural": "Trovato <span>%d</span>",
-    "search.matching": "matching",
+    "search.matching": "con",
     "search.made_by": "creato da",
     "search.detailed": "dettagliato",
 
