@@ -53,8 +53,8 @@
 
 		const author = locatorInfo[1];
 		const repo = locatorInfo[2];
-		const branch = (locatorInfo[3]?.substring(1) ?? 'main') + '/'; // TODO: dynamic main branch name
-		const path = (locatorInfo[4]?.substring(1) ?? '') + '/';
+		const path = (locatorInfo[3]?.substring(1) ?? '') + '/';
+		const branch = (locatorInfo[4]?.substring(1) ?? 'main') + '/'; // TODO: dynamic main branch name
 
 		try {
 			const res = await fetch(
