@@ -65,7 +65,7 @@
 	{@const statViews = $packageStatStore.views[name] ?? 0}
 
 	<a
-		href={`${base}/p?id=${encodeURIComponent(name)}`}
+		href={`${base}/p/${encodeURIComponent(name)}`}
 		class="card flex p-4 hover:variant-soft-primary"
 		class:flex-col={compact}
 		on:click={() => dispatch('select', name)}

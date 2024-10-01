@@ -7,7 +7,7 @@
 
 	onMount(() => {
 		if ($page.url.hash != '') {
-			goto(base + `/p/?id=${$page.url.hash.substring(1)}`);
+			goto(base + `/p/${$page.url.hash.substring(1)}`);
 			return;
 		}
 

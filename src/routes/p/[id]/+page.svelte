@@ -18,7 +18,7 @@
 
 	const toastStore = getToastStore();
 
-	$: id = $page.url.searchParams.get('id');
+	$: id = $page.params.id;
 
 	let thisPackage: { [k: string]: any } = {};
 	let state: 'loading' | 'ready' | 'fail' = 'loading';
