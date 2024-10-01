@@ -32,7 +32,7 @@ export const userPreferencesStore = localStorageStore<{
 	alreadyVisited: boolean;
 }>('preferences', {
 	sortBy: 'name',
-	locale: Object.keys(getLangs()).includes(navigator.language) ? navigator.language : 'en-US',
+	locale: navigator && Object.keys(getLangs()).includes(navigator.language) ? navigator.language : 'en-US',
 	theme: 'kjspkg',
 	lightMode: false,
 	compact: false,
