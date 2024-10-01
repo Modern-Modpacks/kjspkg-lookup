@@ -155,18 +155,20 @@
 	{/if}
 
 	<svelte:fragment slot="trail">
-		<button
-			class="btn-icon hover:variant-soft-primary"
-			use:contextMenu={langContextMenu}
-		>
-			<IconWorld />
-		</button>
-		<button
-			class="btn-icon hover:variant-soft-primary"
-			use:contextMenu={themeContextMenu}
-		>
-			<IconColorSwatch />
-		</button>
+		<span>
+			<button
+				class="btn-icon hover:variant-soft-primary"
+				use:contextMenu={langContextMenu}
+			>
+				<IconWorld />
+			</button>
+			<button
+				class="btn-icon hover:variant-soft-primary"
+				use:contextMenu={themeContextMenu}
+			>
+				<IconColorSwatch />
+			</button>
+		</span>
 		<IconLogin />
 	</svelte:fragment>
 </AppBar>
