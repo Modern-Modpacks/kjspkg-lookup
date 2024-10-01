@@ -1,6 +1,7 @@
 import { localStorageStore } from '@skeletonlabs/skeleton';
 import { writable } from 'svelte/store';
 import { getLangKeys, getLangs } from './utils';
+import { browser } from '$app/environment';
 
 export const packageListStore = writable<{ [key: string]: string } | undefined>();
 export const packageStatStore = writable<{
@@ -32,7 +33,7 @@ export const userPreferencesStore = localStorageStore<{
 	alreadyVisited: boolean;
 }>('preferences', {
 	sortBy: 'name',
-	locale: navigator && Object.keys(getLangs()).includes(navigator.language) ? navigator.language : 'en-US',
+	locale: browser && Object.keys(getLangs()).includes(navigator.language) ? navigator.language : 'en-US',
 	theme: 'kjspkg',
 	lightMode: false,
 	compact: false,
