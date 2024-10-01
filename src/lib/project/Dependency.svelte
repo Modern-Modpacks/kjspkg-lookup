@@ -48,7 +48,7 @@
 {:else}
 	<a
 		class="flex w-full items-center gap-2 p-2 rounded-container-token hover:variant-soft-primary *:pointer-events-none"
-		href={base + `/p?id=${encodeURIComponent(t)}`}
+		href={base + `/p/${encodeURIComponent(t)}`}
 		target="_blank"
 		use:popup={{ event: 'hover', placement: 'top', target: 'dependency/' + t }}
 	>
