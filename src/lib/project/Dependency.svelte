@@ -8,6 +8,7 @@
 	import PackagePreview from './PackagePreview.svelte';
 
 	export let t: string;
+	export let ondelete: (() => void) | undefined = undefined;
 
 	let name = t.substring(4).replaceAll('_', ' ');
 
@@ -34,8 +35,21 @@
 				{
 					type: 'ITEM',
 					label: 'CurseForge',
-					action: () => window.open('https://www.curseforge.com/minecraft/search?category=mods&class=mc-mods&search=' + name)
-				}
+					action: () =>
+						window.open(
+							'https://www.curseforge.com/minecraft/search?category=mods&class=mc-mods&search=' +
+								name
+						)
+				},
+				// @ts-expect-error fuck you
+				...(() => {
+					if (ondelete)
+						return [
+							{ type: 'SEPARATOR' },
+							{ type: 'ITEM', label: $langKeyStore['package.dependency.delete'], action: ondelete }
+						];
+					return [];
+				})()
 			]
 		}}
 	>
@@ -50,6 +64,11 @@
 		class="flex w-full items-center gap-2 p-2 rounded-container-token hover:variant-soft-primary *:pointer-events-none"
 		href={base + `/p/${encodeURIComponent(t)}`}
 		target="_blank"
+		on:click={(e) => {
+			if (!ondelete) return;
+			e.preventDefault();
+			ondelete();
+		}}
 		use:popup={{ event: 'hover', placement: 'top', target: 'dependency/' + t }}
 	>
 		<IconPackage />
