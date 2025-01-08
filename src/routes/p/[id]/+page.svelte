@@ -4,7 +4,12 @@
 	import { page } from '$app/stores';
 	import { Dependency, ManagePackage } from '$lib';
 	import consts from '$lib/consts';
-	import { currentAuthorStore, langKeyStore, packageListStore, packageStatStore } from '$lib/stores';
+	import {
+		currentAuthorStore,
+		langKeyStore,
+		packageListStore,
+		packageStatStore
+	} from '$lib/stores';
 	import {
 		capitalizeFirstLetter,
 		initPackageList,
@@ -79,18 +84,25 @@
 		issueLink = `https://github.com/${author}/${repo}/issues`;
 		docLoc = `https://github.com/${author}/${repo}/blob/${branch}${path}/README.md`;
 
-		(async () => { try {
-			const targetUrl = docLoc.replace(
-				new RegExp(consts.DOCS_URL_REGEX),
-				'raw.githubusercontent.com/$1/$2'
-			);
+		(async () => {
+			try {
+				const targetUrl = docLoc.replace(
+					new RegExp(consts.DOCS_URL_REGEX),
+					'raw.githubusercontent.com/$1/$2'
+				);
 
-			const res = await fetch(targetUrl);
-			if (!res.ok) return;
+				const res = await fetch(targetUrl);
+				if (!res.ok) return;
 
-			const text = await res.text();
-			docs = markdown(text.replace(/(\!\[.*]\()(\.\/)(.*\))/g, `$1https://raw.githubusercontent.com/${author}/${repo}/${branch}/$3`));
-		} catch {} })()
+				const text = await res.text();
+				docs = markdown(
+					text.replace(
+						/(\!\[.*]\()(\.\/)(.*\))/g,
+						`$1https://raw.githubusercontent.com/${author}/${repo}/${branch}/$3`
+					)
+				);
+			} catch {}
+		})();
 
 		try {
 			const res = await fetch(consts.AUTOMATIN_URL + `?stat=views&id=${id}`, { method: 'PUT' });
@@ -132,8 +144,19 @@
 			{@html markdownInline(thisPackage.description)}
 		</span>
 		<span class="text-sm opacity-50">
-			<span>{statDownloads} {statDownloads == 1 ? $langKeyStore['list.download_singluar'] : $langKeyStore['list.download_plural']}</span> &bull;
-			<span>{statViews} {statViews == 1 ? $langKeyStore['list.view_singular'] : $langKeyStore['list.view_plural']}</span>
+			<span
+				>{statDownloads}
+				{statDownloads == 1
+					? $langKeyStore['list.download_singluar']
+					: $langKeyStore['list.download_plural']}</span
+			>
+			&bull;
+			<span
+				>{statViews}
+				{statViews == 1
+					? $langKeyStore['list.view_singular']
+					: $langKeyStore['list.view_plural']}</span
+			>
 		</span>
 	</div>
 
@@ -180,7 +203,7 @@
 		<div class="card hidden space-y-2 p-4 md:block" in:fly={{ y: 20 }}>
 			<dt class="text-sm opacity-50">{$langKeyStore['package.manage_package']}</dt>
 			<dd class="flex flex-col gap-1">
-				<ManagePackage name={id ?? 'no-name'} link={issueLink} />
+				<ManagePackage name={id ?? 'no-name'} />
 			</dd>
 		</div>
 
@@ -212,7 +235,9 @@
 		{#if docs != ''}
 			<section class="card h-fit space-y-4 p-4 lg:col-span-2" in:fly={{ y: 20 }}>
 				<dt class="text-sm opacity-50">
-					<a href={docLoc} class="underline" target="_blank">{$langKeyStore['package.readme_file']}</a>
+					<a href={docLoc} class="underline" target="_blank"
+						>{$langKeyStore['package.readme_file']}</a
+					>
 				</dt>
 				<dd class="style-markdown flex select-text flex-col items-start *:select-text">
 					{@html docs}

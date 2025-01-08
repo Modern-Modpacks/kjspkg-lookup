@@ -8,6 +8,12 @@ body {
 	@apply h-full overflow-hidden;
 }
 
+@layer components {
+	.inp {
+		@apply input variant-form-material focus:ring-0;
+	}
+}
+
 @layer utilities {
 	.style-markdown h1 {
 		@apply h1 mb-2 mt-4 font-bold;

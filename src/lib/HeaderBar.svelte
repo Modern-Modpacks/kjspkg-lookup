@@ -7,7 +7,12 @@
 	import { IconCheck, IconColorSwatch, IconSearch, IconWorld } from '@tabler/icons-svelte';
 	import consts from './consts';
 	import { contextMenu, type ContextMenuItem } from './overlays/contextMenu';
-	import { currentScrollPosition, currentSearchStore, langKeyStore, userPreferencesStore } from './stores';
+	import {
+		currentScrollPosition,
+		currentSearchStore,
+		langKeyStore,
+		userPreferencesStore
+	} from './stores';
 	import { getLangKeys, getLangs, memeLangCount, parseInputString } from './utils';
 	import { fly } from 'svelte/transition';
 	import IconLogin from './IconLogin.svelte';
@@ -19,8 +24,8 @@
 	let searched = getQuery();
 	let langs = getLangs();
 
-	let langElements : ContextMenuItem[];
-	$: langElements = Object.keys(langs).map(lang => {
+	let langElements: ContextMenuItem[];
+	$: langElements = Object.keys(langs).map((lang) => {
 		return {
 			type: 'ITEM',
 			label: langs[lang],
@@ -41,7 +46,14 @@
 		items: [
 			{ type: 'SEPARATOR', header: $langKeyStore['menu.language'] },
 
-			...[...[...langElements.slice(0, 1), { type: 'SEPARATOR' }, ...langElements.slice(1, (memeLangCount ? -memeLangCount : undefined))], ...(memeLangCount ? [{ type: 'SEPARATOR' }, ...langElements.slice(-memeLangCount)] : [])]
+			...[
+				...[
+					...langElements.slice(0, 1),
+					{ type: 'SEPARATOR' },
+					...langElements.slice(1, memeLangCount ? -memeLangCount : undefined)
+				],
+				...(memeLangCount ? [{ type: 'SEPARATOR' }, ...langElements.slice(-memeLangCount)] : [])
+			]
 		] as ContextMenuItem[]
 	};
 	$: themeContextMenu = {
@@ -107,12 +119,12 @@
 
 <svelte:window
 	on:keypress={(event) => {
-		if (
+		/* TODO: if (
 			(event.keyCode >= 48 && event.keyCode <= 57) ||
 			(event.keyCode >= 65 && event.keyCode <= 90) ||
 			(event.keyCode >= 97 && event.keyCode <= 122)
 		)
-			inputElement.focus();
+			inputElement.focus(); */
 	}}
 />
 
@@ -156,16 +168,10 @@
 
 	<svelte:fragment slot="trail">
 		<span>
-			<button
-				class="btn-icon hover:variant-soft-primary"
-				use:contextMenu={langContextMenu}
-			>
+			<button class="btn-icon hover:variant-soft-primary" use:contextMenu={langContextMenu}>
 				<IconWorld />
 			</button>
-			<button
-				class="btn-icon hover:variant-soft-primary"
-				use:contextMenu={themeContextMenu}
-			>
+			<button class="btn-icon hover:variant-soft-primary" use:contextMenu={themeContextMenu}>
 				<IconColorSwatch />
 			</button>
 		</span>
