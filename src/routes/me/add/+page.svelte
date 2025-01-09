@@ -48,10 +48,12 @@
 		const isOrga = repo.parent !== $ghApiLoginStore;
 		const repoUrl = `repos/${repo.parent}/${repo.name}`;
 
+		manifest.author ||= repo.parent;
+
 		// prettier-ignore
 		ensureOk(await postGhInfo(
 			isOrga ? `orgs/${repo.parent}/repos` : `user/repos`,
-			{ name: repo.name, description: '[KJSPKG] ' + manifest.description, has_wiki: false },
+			{ name: repo.name, description: '[KJSPKG] ' + manifest.description, has_wiki: false, homepage: 'https://kjspkglookup.modernmodpacks.site/p/' + id },
 			$ghApiKeyStore
 		));
 

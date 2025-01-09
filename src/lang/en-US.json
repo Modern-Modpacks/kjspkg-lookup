@@ -84,7 +84,7 @@
 	"new.2.err_does_not_exist": "KJSPKG package does not exist, forgot to prefix with 'mod:'?",
 	"new.3.header": "Let's get your files ready.",
 	"new.3.drop": "Drop the KubeJS directory here to auto-populate",
-	"new.3.drop_single": "To update this file, drop it here",
+	"new.3.drop_single": "To update this file, click or drop it here",
 	"new.3.err_no_file": "No file",
 	"new.3.err_not_kjs": "Please drop the KubeJS directory instead",
 	"new.3.err_not_file": "Please drop a file instead",
