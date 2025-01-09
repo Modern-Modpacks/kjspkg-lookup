@@ -40,7 +40,7 @@
 			(e) => (e.preventDefault(), node.classList.remove('!ring-success-500'))
 		);
 	};
-	const drop: DragEventHandler<HTMLDivElement> = async (e) => {
+	const drop: DragEventHandler<HTMLElement> = async (e) => {
 		e.preventDefault();
 
 		if (!e.dataTransfer) return;
@@ -82,7 +82,7 @@
 		}
 		files = files;
 	};
-	const dropFile: DragEventHandler<HTMLDivElement> = async (e) => {
+	const dropFile: DragEventHandler<HTMLElement> = async (e) => {
 		e.preventDefault();
 
 		if (!selectedFile) return;
@@ -128,15 +128,31 @@
 					in:fade|global={{ duration: 20 }}
 					class="flex flex-col items-center justify-center gap-2"
 				>
-					<div
+					<button
 						class="card flex h-fit flex-col items-center gap-2 p-4"
+						on:click={(e) => e.currentTarget?.parentElement?.querySelector('input')?.click()}
 						on:drop={dropFile}
 						use:droppable
-						role="form"
 					>
 						<p class="select-text">{selectedFile} ({file.byteLength}b)</p>
 						<p class="text-sm opacity-50">{$langKeyStore['new.3.drop_single']}</p>
-					</div>
+					</button>
+					<input
+						type="file"
+						class="hidden"
+						on:change={async (e) => {
+							const file = e.currentTarget.files?.[0];
+							if (!file) return;
+							const arrayBuffer = await file.arrayBuffer();
+							// @ts-expect-error bruh
+							selectedFile.split('/').reduce((acc, key, index, arr) => {
+								if (index === arr.length - 1) acc[key] = arrayBuffer;
+								else if (!acc[key]) acc[key] = {};
+								return acc[key];
+							}, files);
+							files = files;
+						}}
+					/>
 					<p class="text-center text-xs opacity-50">{$langKeyStore['new.3.delete']}</p>
 				</div>
 			{/key}
