@@ -50,6 +50,10 @@
 					class="card z-10 p-4"
 					type="text"
 					placeholder="path/to/file.js"
+					on:input={(e) => {
+						const value = e.currentTarget.value;
+						e.currentTarget.value = value.replace(/\\/g, '/');
+					}}
 					on:keydown={(e) => {
 						if (e.key !== 'Enter') return;
 						const value = e.currentTarget.value.trim();
