@@ -135,16 +135,21 @@
 		const plout = pl.join('\n');
 
 		// prettier-ignore
-		/* i cant get this to work lol ensureOk(await postGhInfo(
-			`repos/${$ghApiLoginStore}/kjspkg/git/refs`,
-			{ ref: `refs/heads/pkg/${id}`, sha: packageList.sha },
+		const mainBranchSha = ensureOk(await getGhInfo(
+			`repos/${$ghApiLoginStore}/kjspkg/git/refs/heads/main`,	
 			$ghApiKeyStore
-		)); */
+		)).object.sha;
+		// prettier-ignore
+		ensureOk(await postGhInfo(
+			`repos/${$ghApiLoginStore}/kjspkg/git/refs`,
+			{ ref: `refs/heads/pkg/${id}`, sha: mainBranchSha },
+			$ghApiKeyStore
+		));
 
 		// prettier-ignore
 		ensureOk(await postGhInfo(
 			`repos/${$ghApiLoginStore}/kjspkg/contents/pkgs.json`,
-			{ message: `[KJSPKG] Add package ${id}`, content: btoa(plout), sha: packageList.sha }, //, branch: `pkg/${id}` },
+			{ message: `[KJSPKG] Add package ${id}`, content: btoa(plout), sha: packageList.sha, branch: `pkg/${id}` },
 			$ghApiKeyStore, 'PUT'
 		));
 
@@ -163,7 +168,7 @@
 				**Dependencies**: ${manifest.dependencies.join(', ')}
 				**Incompatibilities**: ${manifest.incompatibilities.join(', ')}
 				**Repository**: https://github.com/${repo.parent}/${repo.name}
-			`, head: `${$ghApiLoginStore}:main`, base: 'main' }, // branch: `pkg/${id}`, base: 'main' },
+			`, head: `${$ghApiLoginStore}:pkg/${id}`, base: 'main' },
 			$ghApiKeyStore, 'POST'
 		));
 
