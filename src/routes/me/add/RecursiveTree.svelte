@@ -24,28 +24,9 @@
 			<IconFile class="mr-1 size-4" />
 			<p class="overflow-hidden">{path}</p>
 			<div>
-				<button
-					class="mr-1 hidden rounded hover:variant-filled-error group-hover:inline"
-					on:click={() => {
-						selectedFile = undefined;
-						delete files[path];
-						if (Object.keys(files).length < 1) filesDelete();
-						files = files;
-					}}
-				>
-					<IconTrash class="size-4" />
-				</button>
-			</div>
-		</button>
-	{:else}
-		<div>
-			<div class="group grid grid-cols-[auto_1fr_auto] items-center">
-				<IconFolder class="mr-1 size-4" />
-				<p class="overflow-hidden">{path}</p>
-
-				<div>
+				{#if p !== ''}
 					<button
-						class="hidden rounded hover:variant-filled-error group-hover:inline"
+						class="mr-1 hidden rounded hover:variant-filled-error group-hover:inline"
 						on:click={() => {
 							selectedFile = undefined;
 							delete files[path];
@@ -55,6 +36,29 @@
 					>
 						<IconTrash class="size-4" />
 					</button>
+				{/if}
+			</div>
+		</button>
+	{:else}
+		<div>
+			<div class="group grid grid-cols-[auto_1fr_auto] items-center">
+				<IconFolder class="mr-1 size-4" />
+				<p class="overflow-hidden">{path}</p>
+
+				<div>
+					{#if p !== ''}
+						<button
+							class="hidden rounded hover:variant-filled-error group-hover:inline"
+							on:click={() => {
+								selectedFile = undefined;
+								delete files[path];
+								if (Object.keys(files).length < 1) filesDelete();
+								files = files;
+							}}
+						>
+							<IconTrash class="size-4" />
+						</button>
+					{/if}
 					<button
 						class="hidden rounded hover:variant-filled-primary group-hover:inline"
 						on:click={() => (creatingDir = true)}
@@ -73,7 +77,7 @@
 						data-popup={popupId}
 						class="card z-10 p-4"
 						type="text"
-						placeholder={creatingDir ? 'path/to/dir' : 'path/to/file.js'}
+						placeholder={creatingDir ? 'dirname' : 'file.js'}
 						on:input={(e) => {
 							const value = e.currentTarget.value;
 							e.currentTarget.value = value.replace(/\\/g, '/');
