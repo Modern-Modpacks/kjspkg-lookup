@@ -53,7 +53,7 @@
 		// prettier-ignore
 		ensureOk(await postGhInfo(
 			isOrga ? `orgs/${repo.parent}/repos` : `user/repos`,
-			{ name: repo.name, description: '[KJSPKG] ' + manifest.description, has_wiki: false },
+			{ name: repo.name, description: '[KJSPKG] ' + manifest.description, has_wiki: false, homepage: 'https://kjspkglookup.modernmodpacks.site/p/' + id },
 			$ghApiKeyStore
 		));
 
