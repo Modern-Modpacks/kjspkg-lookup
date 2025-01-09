@@ -34,7 +34,10 @@
 		buttonNextLabel={$langKeyStore['new.button.next']}
 		buttonCompleteLabel={'Generate'}
 		stepTerm={$langKeyStore['new.button.step']}
-		on:complete={() => (output = JSON.stringify(manifest, null, 4))}
+		on:complete={() => {
+			manifest.author ||= '???';
+			output = JSON.stringify(manifest, null, 4);
+		}}
 	>
 		<Step>
 			<svelte:fragment slot="header">this is experimental</svelte:fragment>

@@ -48,6 +48,8 @@
 		const isOrga = repo.parent !== $ghApiLoginStore;
 		const repoUrl = `repos/${repo.parent}/${repo.name}`;
 
+		manifest.author ||= repo.parent;
+
 		// prettier-ignore
 		ensureOk(await postGhInfo(
 			isOrga ? `orgs/${repo.parent}/repos` : `user/repos`,
